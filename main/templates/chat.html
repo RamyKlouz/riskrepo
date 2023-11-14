@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">RiskReco</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="#">The #1 recommendation service in Risk Management</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Chat</h6>
+            <h1 class="mb-5">RiskReco Chat</h1>
+        </div>         
+          
+    <form method="post" id="chat-form" class="form-horizontal">
+        {% csrf_token %}
+        
+        <label for="message">What do you want to learn about ? </label>
+
+        <div class="d-flex mb-6" style="margin:10px;">
+            <div class="form-outline me-3" style="width: 25rem">
+        <input type="text" class="form-control" name="message" id="message" autocomplete="off" placeholder="Ex: Risk Management">
+            </div>
+    
+        <button class="btn btn-primary btn-sm " type="submit">Send</button>
+
+        </div>
+
+    </form>
+    <div id="chat-log" class="wrapper"></div>
+</div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/chat/',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        $('#chat-log').append('<div class="msg-container left"><p class="msg "><strong>You :</strong>' + $('#message').val() + '</p></div>');
+                        $('#chat-log').append('<div class="msg-container right"><p class="msg "><strong>RiskReco :</strong>' + data.bot_response + '</p></div><br>');
+                        $('#message').val('');
+                        
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

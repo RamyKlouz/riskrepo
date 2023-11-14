@@ -1,0 +1,229 @@
+
+   {% extends 'base.html' %}
+   {% load static %}
+   {% block title %}Home{% endblock %}
+   
+   {% block content %}
+
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Data Science</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Courses</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    {% for option in options %}
+        <div class="container-xxl py-5">
+            <div class="container">
+              
+                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h6 class="section-title bg-white text-center text-primary px-3">diplome</h6>
+                        <h1 class="mb-5">{{ option.nom }}</h1>
+                    </div>
+                    <div class="row g-4 justify-content-center">
+                        {% for diplome in diplomes %}
+                            {% if diplome.option == option %}
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                    <!-- Course block for each option -->
+                                    <div class="course-item bg-light">
+                                        <!-- Course content -->
+                                        <div class="position-relative overflow-hidden">
+                                            <!-- Course image -->
+                                            <img class="img-fluid" src="{% static 'assets/img/course-1.jpg' %}" alt="">
+                                            <!-- Course buttons -->
+                                            <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                                                <a href="{% url 'main:diplomes_details' id=diplome.id %}" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Read More</a>
+                                                <a id="openPopupBtn-{{ diplome.id }}"class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Join Now</a>
+                                            </div>
+                                        </div>
+                                        <!-- Course details -->
+                                        <div class="text-center p-4 pb-0">
+                                            <h3 class="mb-0">{{ diplome.prix }} TND</h3>
+                                            <div class="mb-3">
+                                                <small class="fa fa-star text-primary"></small>
+                                                <small class="fa fa-star text-primary"></small>
+                                                <small class="fa fa-star text-primary"></small>
+                                                <small class="fa fa-star text-primary"></small>
+                                                <small class="fa fa-star text-primary"></small>
+                                                <small>(123)</small>
+                                            </div>
+                                            <h5 class="mb-4">{{ diplome.nom }}</h5>
+                                        </div>
+                                        <!-- Course stats -->
+                                        <div class="d-flex border-top">
+                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>John Doe</small>
+                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>1.49 Hrs</small>
+                                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                                        </div>   
+                                    </div>
+                        </div>
+                        <div id="overlay" class="overlay">
+                            <div id="paymentPopup" class="popup">
+                                <div class="popup-content">
+                                    <span class="close">&times;</span>
+                                  
+                                    
+                                    <form id="paymentForm" method="POST" action="{% url 'main:save_Payment' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="montantDiplome" value="{{ diplome.prix }}">
+                                        <input type="hidden" name="nomDiplome" value="{{ diplome.id }}">
+                                        <h3 id="montantDiplome" name="montantDiplome"></h3>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <!-- Icône utilisateur -->
+                                                    <input type="text" class="form-control" id="cardholderName" name="cardholderName" placeholder="Votre nom">
+                                                    <label for="cardholderName"> <i class="fas fa-user input-icon"></i>Nom du titulaire de la carte(Nom de l'universite)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                     <!-- Icône carte de crédit -->
+                                                     <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Numéro de carte" maxlength="16" oninput="formatCardNumber(this)" required>
+                                                     <label for="cardNumber"><i class="fas fa-credit-card input-icon"></i>Numéro de carte</label>
+                                                </div>    
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                     <!-- Icône calendrier -->
+                                                    <input type="date" class="form-control" id="expiryDate" name="expiryDate"   placeholder="Date d'expiration">
+                                                    <label for="expiryDate"><i class="fas fa-calendar-alt input-icon"></i>Date d'expiration</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <!-- Icône cadenas -->
+                                                    <input type="password" class="form-control" id="cvv" name="cvv"  placeholder="CVV">
+                                                    <label for="cvv"><i class="fas fa-lock input-icon"></i> CVV</label>
+                                                </div>
+                                            </div>
+                                           
+                                            <div class="col-12">
+                                                <button class="btn btn-primary w-100 py-3 pay-btn"  type="submit">Payer</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    
+                </div>
+               
+            </div>
+        </div>
+        {% endfor %}
+        
+   
+
+   
+
+
+<!-- Superposition modale -->
+
+
+<style>
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+    
+    .popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 99999;
+    }
+    
+    .popup-content {
+        position: relative;
+    }
+    
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    
+    .close:hover {
+        color: #f00;
+    }
+    
+    .pay-btn {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+    
+</style>
+
+<script>
+  
+    // Fonction pour ouvrir la superposition modale
+    function openModal() {
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    // Fonction pour fermer la superposition modale
+    function closeModal() {
+        document.getElementById("overlay").style.display = "none";
+    }
+   
+      
+
+    // Écouteur d'événement pour le bouton d'ouverture de la superposition modale
+    {% for diplome in diplomes %}
+    document.getElementById("openPopupBtn-{{ diplome.id }}").addEventListener("click", function() {
+        openModal();
+        // Additional code specific to each option can be placed here
+    });
+    
+ 
+    {% endfor %}
+
+    // Écouteur d'événement pour le bouton de fermeture de la superposition modale
+    document.getElementsByClassName("close")[0].addEventListener("click", closeModal);
+
+    // Écouteur d'événement pour le bouton "Payer"
+    document.querySelector("#paymentPopup .pay-btn").addEventListener("click", function() {
+        window.location.href = "{% url 'main:cursus' %}"; 
+        window.close();// Remplacez 'main:cursus' par le nom de l'URL approprié dans votre projet Django
+    });
+</script>
+
+    <!-- Courses End -->
+
+
+    <!-- Testimonial Start -->
+    
+    <!-- Testimonial End -->
+        
+    {% endblock %}

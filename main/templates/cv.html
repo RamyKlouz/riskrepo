@@ -1,0 +1,110 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Evaluate Your Cv</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Evaluate </h6>
+                <h1 class="mb-5"> Evaluate Your Cv</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 order-md-last wow fadeInUp" data-wow-delay="0.3s">
+                    <h1>Votre camera</h1>
+                    <div class="camera-container">
+                        <video id="video" autoplay style="width: 100%; max-width: 300px;"></video>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                    <label for="email">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select class="form-select" id="interest" aria-label="Your Interest">
+                                        <option selected disabled>Your Interest</option>
+                                        <option value="data-science">Data Science</option>
+                                        <option value="iot">IoT</option>
+                                    </select>
+                                    <label for="interest">Your Interest</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="file" class="form-control" id="cv" accept=".pdf,.doc,.docx">
+                                    <label for="cv">Upload your CV</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit" href="{% url 'main:cursuscv' %}">Evaluate Your CV</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+   
+    <script>
+        // Récupérer l'élément vidéo dans le modèle HTML
+var videoElement = document.getElementById('video');
+
+// Vérifier si l'API MediaDevices est disponible
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // Obtenir la permission d'accéder à la caméra
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            // Afficher le flux vidéo dans l'élément vidéo
+            videoElement.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error('Erreur: Impossible d\'accéder à la caméra', error);
+        });
+} else {
+    console.error('Erreur: L\'API MediaDevices n\'est pas prise en charge.');
+}
+
+    </script>
+    <!-- Contact End -->
+
+
+
+    {% endblock %}
+
+
